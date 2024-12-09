@@ -133,7 +133,7 @@ const Checkout = () => {
 
   const deleteData = async (url: string, { arg }: any) => {
     try {
-      const token = isClient && getSession();
+      const token = isClient && (await getSession());
       if (!token) {
         throw new Error("No access token found");
       }
@@ -162,7 +162,7 @@ const Checkout = () => {
   const getData = async (url: string) => {
     try {
 
-      const token = isClient && getSession();
+      const token = isClient && (await getSession());
 
 
       if (!token) {
@@ -194,7 +194,7 @@ const Checkout = () => {
   const postData = async (url: string, { arg }: { arg: any }) => {
     try {
 
-      const token = isClient && getSession();
+      const token = isClient && (await getSession());
 
       if (!token) {
         throw new Error("No access token found");
@@ -227,7 +227,7 @@ const Checkout = () => {
   const postOrder = async (url: string, { arg }: { arg: OrderData }) => {
     try {
       
-      const token = isClient && getSession();
+      const token = isClient && (await getSession());
 
       if (!token) {
         throw new Error("No access token found");
