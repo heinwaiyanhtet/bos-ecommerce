@@ -49,7 +49,6 @@ export async function generateMetadata({
 const ProductPage = ({ params }: { params: Params }) => {
   const { id, pathSegment } = params;
 
-  // Pass both `id` and `pathSegment` to the ProductDetail component if needed
   return <ProductDetail id={id} pathSegment={pathSegment} />;
 };
 

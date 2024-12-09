@@ -2,17 +2,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  Heart,
-  LucideArrowRight,
-  LucideArrowRightCircle,
-  LucideArrowRightToLine,
-  LucideHeart,
-  Plus,
-} from "lucide-react";
+import { LucideHeart } from "lucide-react";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
-import SweetAlert2 from "react-sweetalert2";
 import { useAppProvider } from "@/app/Provider/AppProvider";
 import useSWRMutation from "swr/mutation";
 import { Backend_URL } from "@/lib/fetch";
@@ -88,7 +80,7 @@ const ProductCard = ({
     router.push(`/products/${pathSegment}/${id}`);
   };
 
-  const { handleLogin,getSession } = useAppProvider();
+  const { handleLogin, getSession } = useAppProvider();
 
   const [isClient, setIsClient] = useState(false);
 
@@ -149,7 +141,6 @@ const ProductCard = ({
   };
 
   const getWishlistData = async (url: string) => {
-    
     const token = await getSession();
 
     if (!token) {
@@ -185,8 +176,7 @@ const ProductCard = ({
 
   const deleteData = async (url: string) => {
     try {
-      const token =
-        typeof window !== "undefined" && getSession();
+      const token = typeof window !== "undefined" && getSession();
       if (!token) {
         throw new Error("No access token found");
       }
@@ -222,7 +212,7 @@ const ProductCard = ({
     <div
       onClick={() => handleClick()}
       key={id}
-      className="  cursor-pointer group duration-300 border-2 border-transparent hover:border-gold-400 hover:bg-gold-400/5 rounded-xl"
+      className=" cursor-pointer group duration-300 border-2 border-transparent hover:border-gold-400 hover:bg-gold-400/5 rounded-xl"
     >
       <div className=" relative ">
         <div className=" absolute top-3 flex items-center gap-3 left-3 text-sm font-serif  text-stone-900 opacity-0 group-hover:opacity-100">
@@ -369,19 +359,19 @@ const ProductCard = ({
                 <Image width={300} height={300} src={"/svg2.svg"} alt="" />
               </AlertDialogTitle>
               <AlertDialogDescription>
-                <p className=" mt-4 text-stone-800 text-lg font-bold font-serif">
+                <p className=" mt-4 text-stone-800 text-lg text-center font-bold font-serif">
                   Your wishlist wants you to sign in first
                 </p>
-                <p>Google got your back!</p>
+                <p className=" text-center"> Google got your back!</p>
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter className=" mt-6 flex justify-end">
+            <AlertDialogFooter className=" mt-6 flex  !justify-center">
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <Button
                 onClick={() => {
                   handleLogin();
                 }}
-                className=" bg-gold-400 hover:bg-[#e2be6a] !py-4 rounded-full "
+                className=" bg-gold-400 hover:bg-[#e2be6a]  !py-4 rounded-full "
               >
                 <FaGoogle className=" me-1" /> Login with Google
               </Button>

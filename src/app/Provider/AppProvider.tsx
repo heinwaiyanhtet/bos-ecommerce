@@ -1,4 +1,5 @@
 "use client";
+
 import { auth, provider } from "@/lib/firebase";
 import { setTokens } from "@/lib/lib";
 import axios from "axios";
@@ -6,9 +7,8 @@ import { signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import useSWR from "swr";
-import Cookies from "js-cookie";
 import jwt, { JwtPayload } from "jsonwebtoken";
-
+import { Backend_URL } from "@/lib/fetch";
 
 const Provider = createContext<any | undefined>(undefined);
 
@@ -40,11 +40,8 @@ const fetcher = async (url: string, idToken: string) => {
 };
 
 const useAuthLogin = (idToken: string | null) => {
-  
   const { data, error } = useSWR(
-    idToken
-      ? ["https://api.bossnationmyanmar.com/auth/EcommerceLogin", idToken]
-      : null,
+    idToken ? [`${Backend_URL}/auth/EcommerceLogin`, idToken] : null,
     ([url, token]) => fetcher(url, token)
   );
 
@@ -52,7 +49,6 @@ const useAuthLogin = (idToken: string | null) => {
 };
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-
   const router = useRouter();
   const [searchInputValue, setSearchInputValue] = useState("");
   const [isClient, setIsClient] = useState(false);
@@ -79,11 +75,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (isClient) {
-      
       const savedCartItems = localStorage.getItem("cartItems");
       const orderRecordItems = localStorage.getItem("orderRecord");
       const addedCartIds = localStorage.getItem("addedCartIds");
-      
+
       try {
         setCartItems(savedCartItems ? JSON.parse(savedCartItems) : []);
         setOrderRecord(orderRecordItems ? JSON.parse(orderRecordItems) : []);
@@ -116,7 +111,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       const idToken = await result.user.getIdToken(true);
       const refreshToken = result.user.refreshToken;
 
-      localStorage.setItem("refreshToken",refreshToken);
+      localStorage.setItem("refreshToken", refreshToken);
 
       setIdToken(idToken);
 
@@ -125,6 +120,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         showConfirmButton: false,
         type: "login",
       });
+      typeof window !== "undefined" && window.location.reload();
     } catch (error) {
       console.error("Error during login:", error);
     }
@@ -155,136 +151,100 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setOrderRecord(orderRecord.filter((el: any) => el.itemId !== id));
   };
 
-    const Backend_URL = process.env.NEXT_PUBLIC_BACKEND_URL; 
+  const getRefreshToken = () => {
+    return localStorage.getItem("refreshToken");
+  };
 
-    const  getRefreshToken =  () => {
+  const clearTokens = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+  };
 
-      return localStorage.getItem("refreshToken");
+  const refreshAccessToken = async () => {
+    console.log("Refreshing access token directly with Firebase");
 
+    const refreshToken = getRefreshToken(); // Function to retrieve the refresh token
+
+    if (!refreshToken) {
+      console.error("No refresh token available");
+      clearTokens();
+      return null;
     }
 
-    const clearTokens = () => {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');      
+    try {
+      const response = await axios.post(
+        `https://securetoken.googleapis.com/v1/token?key=AIzaSyCdZK_dWvof4UIRC1BHLbYLk9PoGLMabI0`,
+        new URLSearchParams({
+          grant_type: "refresh_token",
+          refresh_token: refreshToken,
+        }).toString(),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
 
+      console.log("response", response);
+
+      const { access_token, refresh_token, expires_in } = response.data;
+
+      console.log("New access token:", access_token);
+
+      localStorage.setItem("accessToken", access_token);
+      localStorage.setItem("refreshToken", refresh_token);
+
+      return access_token;
+    } catch (error) {
+      console.error("Error refreshing access token:", error);
+      clearTokens();
+      return null;
     }
-    
-  
-    const refreshAccessToken = async () => {
-      console.log("Refreshing access token directly with Firebase");
-    
-      const refreshToken = getRefreshToken(); // Function to retrieve the refresh token
-    
-      if (!refreshToken) {
-        console.error("No refresh token available");
-        clearTokens();
-        return null;
-      }
-    
-      try {
-        const response = await axios.post(
-          `https://securetoken.googleapis.com/v1/token?key=AIzaSyCdZK_dWvof4UIRC1BHLbYLk9PoGLMabI0`,
-          new URLSearchParams({
-            grant_type: "refresh_token",
-            refresh_token: refreshToken,
-          }).toString(),
-          {
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-          }
-        );
+  };
 
-        console.log("response",response);
-    
-        const { access_token, refresh_token, expires_in } = response.data;
-    
-        console.log("New access token:", access_token);
-  
-
-        localStorage.setItem("accessToken", access_token);
-        localStorage.setItem("refreshToken", refresh_token);
-
-        return access_token; 
-        
-      } catch (error) {
-        console.error("Error refreshing access token:", error);
-        clearTokens(); // Clear tokens if refresh fails
-        return null;
-      }
-    };
-    
-
-
-
-
-
-
-  const decodeToken = (token: string) =>
-  {
+  const decodeToken = (token: string) => {
     try {
       return jwt.decode(token) as JwtPayload;
     } catch {
       return null;
     }
-  }
+  };
 
+  const isJwtPayload = (token: any) => {
+    return typeof token === "object" && token !== null && "exp" in token;
+  };
 
+  const isAccessTokenExpired = (token: string) => {
+    const decoded = decodeToken(token);
 
-    const isJwtPayload = (token: any) =>
-    {
-      return typeof token === "object" && token !== null && "exp" in token;
+    console.log("decode token", decoded);
+
+    if (!decoded || !isJwtPayload(decoded) || !decoded.exp) return true;
+
+    console.log("true for expired");
+    console.log(decoded.exp * 1000 < Date.now());
+    return decoded.exp * 1000 < Date.now();
+  };
+
+  const getSession = async () => {
+    let accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+      accessToken = await refreshAccessToken();
     }
 
+    if (accessToken && isAccessTokenExpired(accessToken)) {
+      console.log("Access token expired, refreshing...");
 
-    const  isAccessTokenExpired = (token: string) => {
-    
-      const decoded = decodeToken(token);
-    
-      console.log("decode token", decoded);
-    
-      if (!decoded || !isJwtPayload(decoded) || !decoded.exp) return true;
-    
-    
-      console.log("true for expired");
-      console.log(decoded.exp * 1000 < Date.now());
-      return decoded.exp * 1000 < Date.now();
-    
+      accessToken = await refreshAccessToken();
     }
 
+    if (accessToken) {
+      return accessToken;
+    }
 
-    const getSession = async () => 
-    {
-
-        console.log("get session in ecomerce");
-
-        let accessToken = localStorage.getItem("accessToken");
-
-        if (!accessToken) 
-        {
-          
-          accessToken = await refreshAccessToken();
-          
-        }
-        
-
-        if (accessToken && isAccessTokenExpired(accessToken)) {
-
-          console.log("Access token expired, refreshing...");
-
-          accessToken = await refreshAccessToken();
-
-        }
-
-        if (accessToken) {
-
-          return accessToken ;
-
-        }
-
-        return null;
-
-    };
+    return null;
+  };
 
   return (
     <Provider.Provider
@@ -315,7 +275,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         setSwalProps,
         wishlistData,
         setWishlistData,
-        getSession
+        getSession,
       }}
     >
       {children}

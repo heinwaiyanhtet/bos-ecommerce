@@ -154,7 +154,7 @@ export const deleteSingleFetch = async (
 ) => {
   try {
     const token = await findToken();
-    
+
     if (!token) {
       throw new Error("No access token found");
     }

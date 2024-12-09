@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
@@ -24,6 +26,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Clock } from "lucide-react";
 import { useAppProvider } from "@/app/Provider/AppProvider";
+import Image from "next/image";
+import { FaGoogle } from "react-icons/fa";
 
 // Define the response shape for your post request
 interface PostCommentResponse {
@@ -32,10 +36,6 @@ interface PostCommentResponse {
   data?: any;
 }
 
-const {
-  getSession
-} = useAppProvider();
-
 const CommentSection = ({
   isUser,
   handleLogin,
@@ -43,6 +43,7 @@ const CommentSection = ({
   productId,
   deleteData,
   customerId,
+  getSession,
 }: {
   isUser: boolean;
 
@@ -54,8 +55,8 @@ const CommentSection = ({
   handleLogin: () => void;
   deleteData: (url: string) => any;
   customerId: number | undefined;
+  getSession: () => void;
 }) => {
-
   const [text, setText] = useState("");
   const [replyText, setReplyText] = useState("");
   const [isClient, setIsClient] = useState(false);
@@ -300,7 +301,6 @@ const CommentSection = ({
                   {customerIds == customerId && (
                     <DropdownMenu>
                       <DropdownMenuTrigger>
-                        =
                         <DotsVerticalIcon />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
@@ -497,26 +497,33 @@ const CommentSection = ({
               ref={alertRef}
               variant="outline"
             >
-              Login To share your thoughts
+              Add to wishlist
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className=" w-[400px] flex justify-center items-center flex-col py-6">
+          <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Login To share your thoughts</AlertDialogTitle>
+              <AlertDialogTitle className=" flex justify-center">
+                <Image width={300} height={300} src={"/svg7.svg"} alt="" />
+              </AlertDialogTitle>
               <AlertDialogDescription>
-                Please login to share your thoughts on this product .
+                <p className=" mt-4 text-stone-800 text-lg text-center font-bold font-serif">
+                  Sign in with Google to Checkout
+                </p>
+                <p className=" text-center">
+                  You&apos;re just one step away from getting your favorites!
+                </p>
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter>
+            <AlertDialogFooter className=" mt-6 flex  !justify-center">
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={(e) => {
+              <Button
+                onClick={() => {
                   handleLogin();
-                  e.stopPropagation();
                 }}
+                className=" bg-gold-400 hover:bg-[#e2be6a]  !py-4 rounded-full "
               >
-                Log in
-              </AlertDialogAction>
+                <FaGoogle className=" me-1" /> Login with Google
+              </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

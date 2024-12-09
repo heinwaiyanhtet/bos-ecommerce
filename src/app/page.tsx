@@ -1,7 +1,5 @@
 "use client";
 
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../lib/firebase";
 import {
   Banner,
   BreadCrumbComponent,
@@ -85,7 +83,13 @@ export default function Home() {
                   <p className=" text-stone-500 text-sm lg:text-base text-center mb-5">
                     The best authentic fashion shop in Yangon.
                   </p>
-                  <Image className=" w-40" src={"/logo.png"} alt="logo" />
+                  <Image
+                    className=" w-40"
+                    src={"/logo.png"}
+                    width={40}
+                    height={40}
+                    alt="logo"
+                  />
                   <p className=" lg:w-[550px] mb-10 lg:mb-20  text-sm lg:text-base text-center ">
                     Welcome to Boss Nation Authentic Fashion, your trusted
                     destination for authentic branded clothing products. Since

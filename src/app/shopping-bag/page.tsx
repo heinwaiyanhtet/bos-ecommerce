@@ -1,13 +1,23 @@
 "use client";
 import { Container } from "@/components/ecom";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LucideChevronRight, Minus, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppProvider } from "../Provider/AppProvider";
 import Image from "next/image";
 import OrderSummary from "@/components/ecom/OrderSummary";
 import { useRouter } from "next/navigation";
-import SweetAlert2 from "react-sweetalert2";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Backend_URL, getFetchForEcom } from "@/lib/fetch";
 import useSWR from "swr";
 import {
@@ -27,6 +37,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { FaGoogle } from "react-icons/fa";
 
 const ShoppingBag = () => {
   const {
@@ -55,10 +66,7 @@ const ShoppingBag = () => {
       if (localStorage.getItem("userId")) {
         router.push("/checkout");
       } else {
-        setSwalProps({
-          ...swalProps,
-          show: true,
-        });
+        alertRef.current?.click();
       }
     }
   };
@@ -76,6 +84,8 @@ const ShoppingBag = () => {
     `${Backend_URL}/landscape-banners`,
     getData
   );
+
+  const alertRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <Container className=" space-y-3 py-12">
@@ -359,55 +369,47 @@ const ShoppingBag = () => {
         </div>
       </div>
 
-      {isClient && (
-        <SweetAlert2
-          customClass={{
-            popup: "w-auto",
-          }}
-          {...swalProps}
-        >
-          <div className=" pointer-events-none space-y-3 text-center">
-            <p className=" pointer-events-none font-medium">
-              Proceed To Checkout
-            </p>
-
-            <p className=" pointer-events-none text-black/50 text-sm">
-              Please Login To Continue.
-            </p>
-
-            <div className=" pointer-events-none flex gap-3 justify-center items-center">
+      <div onClick={(e) => e.stopPropagation()}>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              className=" hidden"
+              onClick={(e) => e.stopPropagation()}
+              ref={alertRef}
+              variant="outline"
+            >
+              Add to wishlist
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className=" flex justify-center">
+                <Image width={300} height={300} src={"/svg8.svg"} alt="" />
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                <p className=" mt-4 text-stone-800 text-lg text-center font-bold font-serif">
+                  Sign in with Google to share your thoughts
+                </p>
+                <p className=" text-center">
+                  {" "}
+                  Tell us what you think—we&apos;d love to hear from you!
+                </p>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className=" mt-6 flex  !justify-center">
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
               <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSwalProps({
-                    ...swalProps,
-                    show: false,
-                  });
-                }}
-                size={"sm"}
-                className="  pointer-events-auto"
-                variant={"outline"}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={(e) => {
+                onClick={() => {
                   handleLogin();
-                  e.stopPropagation();
-                  setSwalProps({
-                    ...swalProps,
-                    show: false,
-                  });
                 }}
-                size={"sm"}
-                className="  pointer-events-auto"
+                className=" bg-gold-400 hover:bg-[#e2be6a]  !py-4 rounded-full "
               >
-                Sign In
+                <FaGoogle className=" me-1" /> Login with Google
               </Button>
-            </div>
-          </div>
-        </SweetAlert2>
-      )}
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </Container>
   );
 };

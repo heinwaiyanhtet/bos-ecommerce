@@ -99,7 +99,8 @@ const ProductDetail = ({
   const [toastText, setToastText] = useState("");
   const btn = useRef<HTMLButtonElement | null>(null);
 
-  const { orderRecord, setOrderRecord, handleLogin,getSession } = useAppProvider();
+  const { orderRecord, setOrderRecord, handleLogin, getSession } =
+    useAppProvider();
 
   const getData = (url: string) => getFetchForEcom(url);
 
@@ -316,8 +317,7 @@ const ProductDetail = ({
 
   const deleteData = async (url: string) => {
     try {
-      const token =
-        typeof window !== "undefined" && getSession();
+      const token = typeof window !== "undefined" && getSession();
       if (!token) {
         throw new Error("No access token found");
       }
@@ -370,6 +370,8 @@ const ProductDetail = ({
   const router = useRouter();
 
   const galleryRef = useRef<HTMLDivElement>(null);
+  const galleryRef2 = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (galleryRef.current) {
       const galleryInstance = new (LightGallery as any)(galleryRef.current, {
@@ -389,6 +391,29 @@ const ProductDetail = ({
 
       return () => {
         galleryInstance.destroy();
+      };
+    }
+  }, [imageToShow]);
+
+  useEffect(() => {
+    if (galleryRef2.current) {
+      const galleryInstance2 = new (LightGallery as any)(galleryRef2.current, {
+        mode: "lg-fade",
+        plugins: [lgZoom, lgVideo],
+        pager: false,
+        thumbnail: false,
+        galleryId: "nature",
+        elementClassNames: "gallery",
+        mobileSettings: {
+          controls: false,
+          showCloseIcon: true,
+          download: false,
+          rotate: false,
+        },
+      });
+
+      return () => {
+        galleryInstance2.destroy();
       };
     }
   }, [imageToShow]);
@@ -627,7 +652,7 @@ const ProductDetail = ({
         </Container>
       ) : (
         <>
-          <div className=" px-2 lg:px-4 flex lg:flex-row flex-col lg:max-w-[1280px] min-w-[414px] mx-auto justify-center gap-2 lg:gap-4">
+          <div className=" px-2 mt-12 lg:px-4 flex lg:flex-row flex-col lg:max-w-[1280px] min-w-[414px] mx-auto justify-center gap-2 lg:gap-4">
             <div className=" basis-full lg:basis-5/12 lg:mb-0 mb-4 ">
               <div className=" top-[130px] sticky">
                 <div className=" grid grid-cols-6 gap-2 lg:gap-4">
@@ -636,83 +661,74 @@ const ProductDetail = ({
                       <div
                         style={{ position: "sticky", top: "0" }}
                         className=" flex flex-col  items-center justify-center gap-2 lg:gap-4"
+                        ref={galleryRef}
                       >
                         {imageToShow.map((el, index) => (
-                          <Image
-                            src={el}
+                          <a
+                            href={el}
                             key={index}
-                            onClick={() => scrollToSlide(index)}
-                            alt=""
-                            className=" aspect-square object-cover object-top !w-full border border-gold-400 rounded-xl "
-                            width={300}
-                            height={300}
-                          />
+                            data-lg-size="1600-2400"
+                            className="gallery__item w-screen lg:w-auto h-full lg:h-auto"
+                          >
+                            <Image
+                              src={el}
+                              alt=""
+                              className=" aspect-square object-cover object-top !w-full border border-gold-400 rounded-xl "
+                              width={300}
+                              height={300}
+                            />
+                          </a>
                         ))}
                       </div>
                     )}
                   </div>
 
                   <div className="lg:col-span-5 col-span-5">
-                    <div>
-                      <div className="relative group border duration-300 overflow-hidden border-gold-400 rounded-xl">
-                        <Carousel
-                          setApi={setApi}
-                          plugins={[
-                            Autoplay({
-                              delay: 4000,
-                            }),
-                          ]}
-                          className="w-full h-[600px]"
-                        >
-                          <CarouselContent>
-                            {error || isLoading ? (
-                              <CarouselItem className=" flex justify-center items-center  bg-neutral-200 animate-pulse"></CarouselItem>
-                            ) : (
-                              <>
-                                {imageToShow.map((el: any, index: number) => (
+                    <div className="relative group border duration-300 overflow-hidden border-gold-400 rounded-xl">
+                      <Carousel
+                        setApi={setApi}
+                        plugins={[
+                          Autoplay({
+                            delay: 4000,
+                          }),
+                        ]}
+                        className="w-full h-[600px]"
+                      >
+                        <CarouselContent>
+                          {error || isLoading ? (
+                            <CarouselItem className=" flex justify-center items-center  bg-neutral-200 animate-pulse"></CarouselItem>
+                          ) : (
+                            <div ref={galleryRef2}>
+                              {imageToShow.map((el: any, index: number) => (
+                                <a
+                                  href={el}
+                                  key={index}
+                                  data-lg-size="1600-2400"
+                                  className="gallery__item w-screen lg:w-auto h-full lg:h-auto"
+                                >
                                   <CarouselItem
                                     key={index}
-                                    className=" rounded-xl  w-full h-[600px] justify-center items-center "
+                                    className=" rounded-xl w-full h-[600px] justify-center items-center "
                                   >
                                     <Image
                                       src={el}
-                                      className=" w-full rounded-xl h-[600px] object-cover object-top "
-                                      alt="banner photo"
+                                      alt=""
+                                      className="img-responsive object-contain object-top !w-full h-full lg:h-auto"
                                       width={800}
                                       height={800}
                                     />
                                   </CarouselItem>
-                                ))}
-                              </>
-                            )}
-                          </CarouselContent>
+                                </a>
+                              ))}
+                            </div>
+                          )}
+                        </CarouselContent>
 
-                          <div className=" hidden">
-                            <CarouselNext ref={next} />
-                            <CarouselPrevious ref={previous} />
-                          </div>
-                        </Carousel>
-
-                        <div className=" bg-white/90 translate-y-full group-hover:translate-y-0 duration-300 items-center absolute bottom-0 w-full justify-between p-5 flex gap-2">
-                          <Button
-                            className="rounded-full size-10 p-0 bg-transparent hover:bg-[#c4a35820] border-2 border-gold-400 text-lg text-gold-400 d-flex justify-items-center"
-                            onClick={() =>
-                              previous.current && previous.current.click()
-                            }
-                          >
-                            <LucideArrowLeft className="size-5" />
-                          </Button>
-                          <div className="py-2 text-center text-gold-400 text-sm ">
-                            Slide {current} of {imageToShow.length}
-                          </div>
-                          <Button
-                            className="rounded-full size-10 p-0 bg-transparent hover:bg-[#c4a35820] border-2 border-gold-400 text-lg text-gold-400 d-flex justify-items-center"
-                            onClick={() => next.current && next.current.click()}
-                          >
-                            <LucideArrowRight className="size-5" />
-                          </Button>
+                        <div className=" hidden">
+                          <CarouselNext ref={next} />
+                          <CarouselPrevious ref={previous} />
                         </div>
-                      </div>
+                      </Carousel>
                     </div>
                   </div>
                 </div>
@@ -870,7 +886,7 @@ const ProductDetail = ({
                                   onClick={() => {
                                     handleColorChange(colorCode);
                                     setVariantId(id);
-                                    setImagesToShow([mediaUrl]);
+                                    // setImagesToShow([mediaUrl]);
                                     setTotalAvailable(1);
                                   }}
                                   className={`cursor-pointer rounded-full p-1 ${
@@ -1052,6 +1068,7 @@ const ProductDetail = ({
                         ? Number(localStorage.getItem("userId"))
                         : undefined
                     }
+                    getSession={getSession}
                   />
                 </div>
               </div>
@@ -1095,44 +1112,11 @@ const ProductDetail = ({
                 Click
               </Button>
 
-              <div onClick={(e) => e.stopPropagation()}>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button
-                      className=" hidden"
-                      onClick={(e) => e.stopPropagation()}
-                      ref={alertRef}
-                      variant="outline"
-                    >
-                      Add to wishlist
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent className=" w-[400px] flex justify-center items-center flex-col py-6">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Add to wishlist</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Your wishlist is currently empty. Log in or create an
-                        account to save your wishlist across all your devices.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={(e) => {
-                          handleLogin();
-                          e.stopPropagation();
-                        }}
-                      >
-                        Log in
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
               <hr className=" my-24" />
               <HotDealAlert data={dealData} isLoading={isDealLoading} />
             </div>
           </Container>
+
           <div onClick={(e) => e.stopPropagation()}>
             <AlertDialog>
               <AlertDialogTrigger asChild>
@@ -1151,19 +1135,19 @@ const ProductDetail = ({
                     <Image width={300} height={300} src={"/svg2.svg"} alt="" />
                   </AlertDialogTitle>
                   <AlertDialogDescription>
-                    <p className=" mt-4 text-stone-800 text-lg font-bold font-serif">
+                    <p className=" mt-4 text-stone-800 text-lg text-center font-bold font-serif">
                       Your wishlist wants you to sign in first
                     </p>
-                    <p>Google got your back!</p>
+                    <p className=" text-center"> Google got your back!</p>
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter className=" mt-5 flex justify-end">
+                <AlertDialogFooter className=" mt-6 flex  !justify-center">
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <Button
                     onClick={() => {
                       handleLogin();
                     }}
-                    className=" bg-gold-400 hover:bg-[#e2be6a] !py-4 rounded-full "
+                    className=" bg-gold-400 hover:bg-[#e2be6a]  !py-4 rounded-full "
                   >
                     <FaGoogle className=" me-1" /> Login with Google
                   </Button>

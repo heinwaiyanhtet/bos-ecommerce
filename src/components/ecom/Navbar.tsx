@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useEffect, use } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import {
@@ -58,7 +58,7 @@ const Navbar = () => {
     setSwalProps,
     handleLogin,
     orderRecord,
-    getSession
+    getSession,
   } = useAppProvider();
 
   const [debouncedValue, setDebouncedValue] = useState(searchInputValue);
@@ -102,7 +102,6 @@ const Navbar = () => {
 
   const getData = async (url: string) => {
     try {
-
       const token = isClient && (await getSession());
 
       console.log("token from navbar", token);
@@ -120,7 +119,7 @@ const Navbar = () => {
       };
 
       const response = await fetch(url, options);
-      
+
       console.log("response from navbar", response);
 
       const data = await response.json();
@@ -267,6 +266,7 @@ const Navbar = () => {
                   </span>
                 </>
               }
+              type={"wishlist"}
               title={
                 <span className=" mt-2 flex items-center gap-2">
                   <LucideHeart className=" fill-gold-400 stroke-gold-400" />{" "}
@@ -288,7 +288,7 @@ const Navbar = () => {
             <ControlSheet
               buttonName={
                 <>
-                  <span className=" active:scale-75   hover:bg-stone-100 duration-300 border border-transparent hover:border-gold-400 size-12 flex justify-center items-center rounded-full">
+                  <span className=" active:scale-75 hover:bg-stone-100 duration-300 border border-transparent hover:border-gold-400 size-12 flex justify-center items-center rounded-full">
                     <LucideShoppingBag className=" stroke-gold-400" />
                   </span>
                 </>
@@ -298,13 +298,11 @@ const Navbar = () => {
                   <span className="my-2 flex items-center gap-2">
                     <LucideShoppingBag className="  stroke-gold-400" />{" "}
                     <span>Your Cart Items</span>
-                    <span className=" bg-stone-300 px-5 size-4 text-sm rounded-full flex justify-center items-center">
-                      {orderRecord?.length}
-                    </span>
                   </span>
                 </>
               }
               closeRef={closeRef}
+              type={"cart"}
               // desc="Your shopping cart is just a few clicks away from becoming yours!"
             >
               <Cart closeRef={closeRef} />
@@ -403,7 +401,7 @@ const Navbar = () => {
 
                         typeof window !== "undefined" &&
                           localStorage.removeItem("accessToken");
-                          localStorage.removeItem("refreshToken");
+                        localStorage.removeItem("refreshToken");
                         localStorage.removeItem("userId");
                         router.push("/");
                         setWishlistData([]);

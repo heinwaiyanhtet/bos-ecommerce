@@ -20,6 +20,7 @@ type controls = {
   desc?: any;
   children: React.ReactNode;
   closeRef?: any;
+  type?: any;
 };
 
 const ControlSheet = ({
@@ -28,9 +29,10 @@ const ControlSheet = ({
   desc,
   children,
   closeRef,
+  type,
 }: controls) => {
   const [open, setOpen] = useState(false);
-  const { orderRecord } = useAppProvider();
+  const { orderRecord, wishlistData } = useAppProvider();
 
   return (
     <Sheet
@@ -46,12 +48,12 @@ const ControlSheet = ({
           </Button>
         ) : (
           <Button size={"sm"} variant={"ghost"} className="!p-0 !m-0 relative">
-            {title == "Add to Cart" &&
+            {type == "cart" &&
               orderRecord?.reduce((pv: any, cv: any) => pv + cv.quantity, 0) >
                 0 && (
                 <span
                   style={{ zIndex: 1500 }}
-                  className=" absolute -top-1  bg-red-500 rounded-full right-0.5 h-4 w-4  text-red-50 !p-0 flex justify-center items-center"
+                  className=" absolute top-0 text-[8px] bg-stone-900 rounded-full right-1.5 h-4 w-4  text-stone-200 !p-0 flex justify-center items-center"
                 >
                   {orderRecord?.reduce(
                     (pv: any, cv: any) => pv + cv?.quantity,
@@ -60,6 +62,14 @@ const ControlSheet = ({
                 </span>
               )}
 
+            {type == "wishlist" && wishlistData?.length > 0 && (
+              <span
+                style={{ zIndex: 1500 }}
+                className=" absolute top-0 text-[8px] bg-stone-900 rounded-full right-1.5 h-4 w-4  text-stone-200 !p-0 flex justify-center items-center"
+              >
+                {wishlistData?.length}
+              </span>
+            )}
             {buttonName}
           </Button>
         )}
