@@ -151,6 +151,24 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [data, error]);
 
+  useEffect(() => {
+
+    if(
+      localStorage.getItem("name")  &&
+      localStorage.getItem("email")  &&
+      localStorage.getItem("userId")  
+    )
+    {
+      setUserInfo({
+        name: localStorage.getItem("name"),
+        email: localStorage.getItem("email"),
+        id: localStorage.getItem("userId"),
+      });
+    }
+
+  }, []);
+
+
   const removeFromCart = (id: string | string[]) => {
     setOrderRecord(orderRecord.filter((el: any) => el.itemId !== id));
   };
