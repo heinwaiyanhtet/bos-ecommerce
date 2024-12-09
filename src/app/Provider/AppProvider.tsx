@@ -120,13 +120,14 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         showConfirmButton: false,
         type: "login",
       });
-      typeof window !== "undefined" && window.location.reload();
     } catch (error) {
       console.error("Error during login:", error);
     }
   };
 
   const { data } = useAuthLogin(idToken);
+
+  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
     if (data) {
@@ -137,10 +138,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
       }
-
-      const { accessToken, refreshToken } = data;
-
       setTokens(data);
+      setUserInfo({
+        name: data.user.name,
+        email: data.user.email,
+        id: data.user.id,
+      });
     }
 
     if (error) {
@@ -277,6 +280,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         wishlistData,
         setWishlistData,
         getSession,
+        userInfo,
+        setUserInfo,
       }}
     >
       {children}

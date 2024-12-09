@@ -59,6 +59,10 @@ const Navbar = () => {
     handleLogin,
     orderRecord,
     getSession,
+    isLoggedIn,
+    setIsLoggedIn,
+    userInfo,
+    setUserInfo,
   } = useAppProvider();
 
   const [debouncedValue, setDebouncedValue] = useState(searchInputValue);
@@ -159,14 +163,6 @@ const Navbar = () => {
       setWishlistData(wishlistDataSWR.data);
     }
   }, [wishlistDataSWR]);
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    if (isClient) {
-      setIsLoggedIn(localStorage.getItem("accessToken") !== null);
-    }
-  }, [isClient, userId]);
 
   return (
     <header className=" h-[80px] z-[50] border-b-2 border-gold-400 cursor-pointer overflow-hidden select-none fixed flex justify-center items-center bg-secondary min-w-full">
@@ -313,7 +309,7 @@ const Navbar = () => {
                 buttonName={
                   <>
                     <span className=" active:scale-75  hover:bg-stone-100 duration-300 border border-transparent hover:border-gold-400 size-12 flex justify-center items-center rounded-full">
-                      {isLoggedIn ? (
+                      {userInfo?.name ? (
                         <Avatar
                           name={userData?.name}
                           size="40"
@@ -327,18 +323,18 @@ const Navbar = () => {
                   </>
                 }
                 title={
-                  !isLoggedIn
-                    ? "Just one click away..."
-                    : `Hi, ${userData?.name}`
+                  userInfo?.name
+                    ? `Hi, ${userInfo?.name}.`
+                    : `Just one click away..`
                 }
                 desc={
-                  !isLoggedIn
-                    ? "Sign in with Google and let's get shopping!"
-                    : ""
+                  userInfo?.name
+                    ? ""
+                    : "Sign in with Google and let's get shopping!"
                 }
                 closeRef={closeRef}
               >
-                {!isLoggedIn ? (
+                {!userInfo?.name ? (
                   <div className=" flex flex-col items-center h-[60%] justify-center gap-4">
                     <Image
                       src={"/svg1.svg"}
@@ -405,6 +401,7 @@ const Navbar = () => {
                         localStorage.removeItem("userId");
                         router.push("/");
                         setWishlistData([]);
+                        setUserInfo({});
                       }}
                       className="text-sm flex items-center gap-1.5 leading-3 font-medium cursor-pointer uppercase"
                     >

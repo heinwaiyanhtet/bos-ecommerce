@@ -47,6 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={GeistSans.className}>
+        
         <AppProvider>{children}</AppProvider>
         <Toaster position="bottom-left" />
       </body>
