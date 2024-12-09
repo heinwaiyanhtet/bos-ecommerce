@@ -47,9 +47,9 @@ const UserAddressPage = () => {
     }
   }, [isClient]);
 
-  const patchData = async (url: string, { arg }: any) => {
+  const  patchData = async (url: string, { arg }: any) => {
     try {
-      const token = isClient && getSession();
+      const token = isClient &&  (await getSession());
       if (!token) {
         throw new Error("No access token found");
       }
@@ -76,9 +76,9 @@ const UserAddressPage = () => {
     }
   };
 
-  const deleteData = async (url: string, { arg }: any) => {
+  const  deleteData = async (url: string, { arg }: any) => {
     try {
-      const token = isClient && getSession();
+      const token = isClient && (await getSession());
       if (!token) {
         throw new Error("No access token found");
       }
@@ -106,7 +106,7 @@ const UserAddressPage = () => {
 
   const getData = async (url: string) => {
     try {
-      const token = isClient && getSession();
+      const token = isClient &&  (await getSession());
       if (!token) {
         throw new Error("No access token found");
       }
@@ -193,7 +193,7 @@ const UserAddressPage = () => {
     trigger: addAddress,
     isMutating: addingAddress,
   } = useSWRMutation(
-    selectedAddress !== "" ? `${Backend_URL}/address` : null,
+    selectedAddress !== "" ? `${Backend_URL}` : null,
     postData
   );
 
