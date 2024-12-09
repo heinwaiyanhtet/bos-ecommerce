@@ -135,6 +135,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem("email", data.user.email);
         localStorage.setItem("name", data.user.name);
         localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
       }
 
       const { accessToken, refreshToken } = data;
