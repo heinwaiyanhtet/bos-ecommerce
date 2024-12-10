@@ -275,7 +275,6 @@ const CommentSection = ({
           </Button>
         </div>
       </div>
-
       <div className="w-full my-6">
         {data?.data.filter(
           (el: any) => el.status == "APPROVED" || el.customer.id == customerId
@@ -325,7 +324,6 @@ const CommentSection = ({
                           onClick={async () => {
                             await setDeleteId(parentId);
                             const res = await deleteItem();
-
                             if (res) {
                               mutate();
                             }
@@ -337,14 +335,17 @@ const CommentSection = ({
                     </DropdownMenu>
                   )}
                 </div>
+
                 <p className="text-sm text-stone-500 bg-[#fff5de] p-3 rounded leading-6">
                   {content}
                 </p>
+
                 <div className=" flex gap-1  items-center">
                   <div className=" flex gap-2 ps-3 items-center">
                     <Clock size={16} />
                     <p className=" text-xs">{timeAgo(createdAt)}</p>
                   </div>
+
                   <Button
                     variant={"link"}
                     size={"sm"}
@@ -355,6 +356,7 @@ const CommentSection = ({
                     Reply
                   </Button>
                 </div>
+
                 <div className=" ms-4">
                   {replies.length > 0 && (
                     <>
@@ -401,9 +403,9 @@ const CommentSection = ({
                                             onClick={async () => {
                                               await setDeleteId(id);
                                               const res = await deleteItem();
-
                                               if (res) {
                                                 mutate();
+                                                console.log(res);
                                               }
                                             }}
                                           >
@@ -413,9 +415,11 @@ const CommentSection = ({
                                       </DropdownMenu>
                                     )}
                                 </div>
+
                                 <p className="text-sm text-stone-500 bg-[#fff5de] p-3 rounded leading-6">
                                   {content}
                                 </p>
+
                                 <div className=" flex gap-1 items-center">
                                   <div className=" flex gap-2 ps-3  items-center">
                                     <Clock size={16} />
@@ -446,48 +450,44 @@ const CommentSection = ({
 
                 <div className=" mt-2">
                   {replyId !== null && replyId == parentId && (
-                    <Textarea
-                      rows={5}
-                      value={text}
-                      ref={inputRef}
-                      onChange={(e) => setText(e.target.value)}
-                      placeholder="Write a review"
-                      className="w-full"
-                      onFocus={() => {
-                        if (!isUser) {
-                          alertRef.current && alertRef.current.click();
-                        } else {
-                          setIsFocus(true);
-                        }
-                      }}
-                      onBlur={() => setIsFocus(false)}
-                    />
-                  )}
-
-                  {replyText.length > 0 && (
-                    <div className=" flex justify-end mt-3 lg:w-2/3">
-                      <Button
-                        onClick={async () => {
-                          const res = editId.status
-                            ? await editComment({
-                                content: text,
-                                status: "PENDING",
-                              })
-                            : await reply({
-                                content: replyText,
-                                productId: productId,
-                                parentId: parentId,
-                              });
-
-                          if (res?.status) {
-                            setReplyText("");
-                            setReplyId(null);
-                            mutate();
+                    <div className=" relative group">
+                      <Textarea
+                        rows={5}
+                        value={replyText}
+                        ref={inputRef}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="Write a review"
+                        className="w-full"
+                        onFocus={() => {
+                          if (!isUser) {
+                            alertRef.current && alertRef.current.click();
+                          } else {
+                            setIsFocus(true);
                           }
                         }}
+                        onBlur={() => setIsFocus(false)}
+                      />
+
+                      <div
+                        className={`absolute bottom-0 right-0 p-3 duration-300`}
                       >
-                        Done
-                      </Button>
+                        <Button
+                          onClick={async () => {
+                            const res = await reply({
+                              content: replyText,
+                              productId: productId,
+                              parentId: parentId,
+                            });
+                            if (res?.status) {
+                              setReplyText("");
+                              mutate();
+                              setReplyId(null);
+                            }
+                          }}
+                        >
+                          Save Review
+                        </Button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -495,6 +495,7 @@ const CommentSection = ({
             )
           )}
       </div>
+
       <div onClick={(e) => e.stopPropagation()}>
         <AlertDialog>
           <AlertDialogTrigger asChild>
