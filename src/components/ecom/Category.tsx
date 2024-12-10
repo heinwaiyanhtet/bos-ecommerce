@@ -111,17 +111,17 @@ const CategoryComponent = ({ id, param, url }: any) => {
                   </SelectTrigger>
 
                   <SelectContent>
-                    <SelectItem value="sortBy=id&orderDirection=asc">
+                    <SelectItem value="orderBy=id&orderDirection=asc">
                       Oldest to newest
                     </SelectItem>
-                    <SelectItem value="sortBy=id&orderDirection=desc">
+                    <SelectItem value="orderBy=id&orderDirection=desc">
                       Latest to oldest
                     </SelectItem>
 
-                    <SelectItem value="sortBy=salePrice&orderDirection=asc">
+                    <SelectItem value="orderBy=salePrice&orderDirection=asc">
                       Price low to high
                     </SelectItem>
-                    <SelectItem value="sortBy=salePrice&orderDirection=desc">
+                    <SelectItem value="orderBy=salePrice&orderDirection=desc">
                       Price high to low
                     </SelectItem>
                   </SelectContent>

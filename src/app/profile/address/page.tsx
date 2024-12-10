@@ -174,6 +174,7 @@ const UserAddressPage = () => {
       }
     }
   }, [isClient]);
+
   const {
     data: addressData,
     isLoading: addressLoading,
@@ -191,10 +192,7 @@ const UserAddressPage = () => {
     error: addAddressError,
     trigger: addAddress,
     isMutating: addingAddress,
-  } = useSWRMutation(
-    selectedAddress !== "" ? `${Backend_URL}` : null,
-    postData
-  );
+  } = useSWRMutation(`${Backend_URL}/address`, postData);
 
   const {
     data: editAddressData,
@@ -303,6 +301,15 @@ const UserAddressPage = () => {
         {editAddressError && (
           <p className=" text-sm text-red-500">{editAddressError.message}</p>
         )}
+        {editAddressDeleteError && (
+          <p className=" text-sm text-red-500">
+            {editAddressDeleteError.message}
+          </p>
+        )}
+
+        {addAddressError && (
+          <p className=" text-sm text-red-500">{addAddressError.message}</p>
+        )}
 
         <div className=" space-y-3 ">
           <RadioGroup
@@ -344,6 +351,19 @@ const UserAddressPage = () => {
                       </div>
 
                       <div className=" flex items-center">
+                        <Button
+                          size={"sm"}
+                          disabled={editingAddress}
+                          onClick={async (e) => {
+                            e.preventDefault();
+                            await setSelectedAddress(id);
+                            await deleteAddress();
+                            await mutate();
+                          }}
+                          variant={"ghost"}
+                        >
+                          Delete
+                        </Button>
                         <Button
                           size={"sm"}
                           disabled={editingAddress}

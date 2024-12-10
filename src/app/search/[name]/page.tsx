@@ -34,15 +34,15 @@ const SearchPage = ({ params }: { params: any }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
-  const sortBy = searchParams.get("sortBy");
+  const orderBy = searchParams.get("orderBy");
   const orderDirection = searchParams.get("orderDirection");
 
   const { data, isLoading, error } = useSWR(
     `${Backend_URL}/ecommerce-Products/riddle?search=${decodeURIComponent(
       params.name
     )}&page=${page}${
-      sortBy !== null
-        ? `&sortBy=${sortBy}&orderDirection=${orderDirection}`
+      orderBy !== null
+        ? `&orderBy=${orderBy}&orderDirection=${orderDirection}`
         : ""
     }&limit=${12}`,
     getData,
@@ -146,16 +146,16 @@ const SearchPage = ({ params }: { params: any }) => {
 
                       <SelectContent>
                         <SelectItem value=" ">Default</SelectItem>
-                        <SelectItem value="sortBy=id&orderDirection=desc">
+                        <SelectItem value="orderBy=id&orderDirection=desc">
                           Latest to oldest
                         </SelectItem>
-                        <SelectItem value="sortBy=id&orderDirection=asc">
+                        <SelectItem value="orderBy=id&orderDirection=asc">
                           Oldest to latest
                         </SelectItem>
-                        <SelectItem value="sortBy=salePrice&orderDirection=asc">
+                        <SelectItem value="orderBy=salePrice&orderDirection=asc">
                           Price low to high
                         </SelectItem>
-                        <SelectItem value="sortBy=salePrice&orderDirection=desc">
+                        <SelectItem value="orderBy=salePrice&orderDirection=desc">
                           Price high to low
                         </SelectItem>
                       </SelectContent>

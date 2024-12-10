@@ -108,7 +108,7 @@ const Navbar = () => {
     try {
       const token = isClient && (await getSession());
 
-      console.log("token from navbar", token);
+      // console.log("token from navbar", token);
 
       if (!token) {
         throw new Error("No access token found");
@@ -309,16 +309,14 @@ const Navbar = () => {
                 buttonName={
                   <>
                     <span className=" active:scale-75  hover:bg-stone-100 duration-300 border border-transparent hover:border-gold-400 size-12 flex justify-center items-center rounded-full">
-                      {
-                        userInfo?.name ? (
-                          <Avatar
-                            name={userInfo?.name}
-                            size="40"
-                            color="#c4a358"
-                            round={true}
-                          />
-                      ) : 
-                      (
+                      {userInfo?.name ? (
+                        <Avatar
+                          name={userInfo?.name}
+                          size="40"
+                          color="#c4a358"
+                          round={true}
+                        />
+                      ) : (
                         <LucideUser2 className=" stroke-gold-400" />
                       )}
                     </span>

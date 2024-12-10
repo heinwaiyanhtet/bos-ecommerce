@@ -49,12 +49,7 @@ interface OrderData {
 }
 
 const Order = ({ params }: any) => {
-
-  const {
-  
-    getSession,
-    
-  } = useAppProvider();
+  const { getSession } = useAppProvider();
 
   const [isClient, setIsClient] = useState(false);
 
@@ -176,8 +171,6 @@ const Order = ({ params }: any) => {
 
   const btn = React.useRef<HTMLButtonElement | null>(null);
 
-  console.log(data);
-
   return (
     <>
       {!isLoading && (
@@ -188,6 +181,9 @@ const Order = ({ params }: any) => {
             </div>
           ) : (
             <Container>
+              {error && (
+                <p className=" text-red-500 mb-3 text-sm">{error?.message}</p>
+              )}
               <div className=" mb-4 flex flex-col gap-4">
                 <Breadcrumb>
                   <BreadcrumbList>

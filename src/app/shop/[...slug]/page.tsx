@@ -41,19 +41,21 @@ const GeneralizedPage = ({ params }: { params: any }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
-  const sortBy = searchParams.get("sortBy");
+  const orderBy = searchParams.get("orderBy");
   const orderDirection = searchParams.get("orderDirection");
 
   const { data, isLoading, error } = useSWR(
     `${Backend_URL}/ecommerce-Products/riddle/${
       params.slug[0]
     }?page=${page}&limit=${12}${
-      sortBy !== null
-        ? `&sortBy=${sortBy}&orderDirection=${orderDirection}`
+      orderBy !== null
+        ? `&orderBy=${orderBy}&orderDirection=${orderDirection}`
         : ""
     }`,
     getData
   );
+
+  console.log(data);
 
   const [currentPage, setCurrentPage] = useState(Number(page));
 
@@ -78,8 +80,6 @@ const GeneralizedPage = ({ params }: { params: any }) => {
       : router.push(`/shop/${params.slug[0]}?page=${newPage}&${sorting}`);
   };
 
-  console.log(params);
-
   return (
     <div className=" mt-12">
       <Container>
@@ -88,6 +88,7 @@ const GeneralizedPage = ({ params }: { params: any }) => {
             path="Home"
             currentPage={params.slug[0] == "new-in" ? "New In" : params.slug[0]}
           />
+
           {params.slug[0] == "new-in" && (
             <Heading
               header={`Fresh Drops, Fresh Looks`}
@@ -153,16 +154,16 @@ const GeneralizedPage = ({ params }: { params: any }) => {
 
                   <SelectContent>
                     <SelectItem value=" ">Default</SelectItem>
-                    <SelectItem value="sortBy=id&orderDirection=desc">
+                    <SelectItem value="orderBy=id&orderDirection=desc">
                       Latest to oldest
                     </SelectItem>
-                    <SelectItem value="sortBy=id&orderDirection=asc">
+                    <SelectItem value="orderBy=id&orderDirection=asc">
                       Oldest to latest
                     </SelectItem>
-                    <SelectItem value="sortBy=salePrice&orderDirection=asc">
+                    <SelectItem value="orderBy=salePrice&orderDirection=asc">
                       Price low to high
                     </SelectItem>
-                    <SelectItem value="sortBy=salePrice&orderDirection=desc">
+                    <SelectItem value="orderBy=salePrice&orderDirection=desc">
                       Price high to low
                     </SelectItem>
                   </SelectContent>

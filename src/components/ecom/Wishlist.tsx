@@ -21,8 +21,7 @@ const WishList = ({ closeRef, wishlistData, mutate }: any) => {
 
   const getData = async (url: string) => {
     try {
-      const token =
-        typeof window !== "undefined" && getSession();
+      const token = typeof window !== "undefined" && getSession();
       if (!token) {
         throw new Error("No access token found");
       }
@@ -55,8 +54,7 @@ const WishList = ({ closeRef, wishlistData, mutate }: any) => {
 
   const deleteData = async (url: string) => {
     try {
-      const token =
-        typeof window !== "undefined" && getSession();
+      const token = typeof window !== "undefined" && getSession();
       if (!token) {
         throw new Error("No access token found");
       }
