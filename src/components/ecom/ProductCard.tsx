@@ -90,7 +90,7 @@ const ProductCard = ({
 
   const postData = async (url: string, { arg }: { arg: any }) => {
     try {
-      const token = isClient && getSession();
+      const token = isClient && (await getSession());
       if (!token) {
         throw new Error("No access token found");
       }
@@ -141,7 +141,7 @@ const ProductCard = ({
   };
 
   const getWishlistData = async (url: string) => {
-    const token = await getSession();
+    const token = isClient && (await getSession());
 
     if (!token) {
       throw new Error("No access token found");
@@ -176,7 +176,8 @@ const ProductCard = ({
 
   const deleteData = async (url: string) => {
     try {
-      const token = typeof window !== "undefined" && getSession();
+      const token = typeof window !== "undefined" && (await getSession());
+      
       if (!token) {
         throw new Error("No access token found");
       }
