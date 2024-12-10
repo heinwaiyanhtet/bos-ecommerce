@@ -86,6 +86,7 @@ const ShoppingBag = () => {
   );
 
   const alertRef = useRef<HTMLButtonElement | null>(null);
+  const ref = useRef<HTMLButtonElement | null>(null);
 
   return (
     <Container className=" space-y-3 py-12">
@@ -397,12 +398,13 @@ const ShoppingBag = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className=" mt-6 flex  !justify-center">
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel ref={ref}>Cancel</AlertDialogCancel>
               <Button
                 onClick={() => {
                   handleLogin();
+                  ref.current?.click();
                 }}
-                className=" bg-gold-400 hover:bg-[#e2be6a]  !py-4 rounded-full "
+                className=" bg-gold-400 hover:bg-[#e2be6a] !py-4 rounded-full "
               >
                 <FaGoogle className=" me-1" /> Login with Google
               </Button>

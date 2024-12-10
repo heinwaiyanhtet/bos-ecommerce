@@ -313,6 +313,8 @@ const ProductDetail = ({
     }
   };
 
+  const ref = useRef<HTMLButtonElement | null>(null);
+
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const deleteData = async (url: string) => {
@@ -1142,10 +1144,11 @@ const ProductDetail = ({
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className=" mt-6 flex  !justify-center">
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel ref={ref}>Cancel</AlertDialogCancel>
                   <Button
                     onClick={() => {
                       handleLogin();
+                      ref.current?.click();
                     }}
                     className=" bg-gold-400 hover:bg-[#e2be6a]  !py-4 rounded-full "
                   >

@@ -184,6 +184,8 @@ const CommentSection = ({
     patchComment
   );
 
+  const ref = useRef<HTMLButtonElement | null>(null);
+
   const [replyId, setReplyId] = useState<null | number>(null);
 
   const { error: replyError, trigger: reply } = useSWRMutation(
@@ -222,6 +224,11 @@ const CommentSection = ({
     <div className="my-12 me-2 space-y-3">
       <p className="text-2xl font-semibold">Customer Reviews</p>
       {addError && (
+        <p>
+          <span className="text-red-500">Error:</span> {addError.message}
+        </p>
+      )}
+      {editCommentError && (
         <p>
           <span className="text-red-500">Error:</span> {addError.message}
         </p>
@@ -515,10 +522,11 @@ const CommentSection = ({
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className=" mt-6 flex  !justify-center">
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel ref={ref}>Cancel</AlertDialogCancel>
               <Button
                 onClick={() => {
                   handleLogin();
+                  ref.current?.click();
                 }}
                 className=" bg-gold-400 hover:bg-[#e2be6a]  !py-4 rounded-full "
               >

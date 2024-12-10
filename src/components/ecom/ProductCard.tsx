@@ -177,7 +177,7 @@ const ProductCard = ({
   const deleteData = async (url: string) => {
     try {
       const token = typeof window !== "undefined" && (await getSession());
-      
+
       if (!token) {
         throw new Error("No access token found");
       }
@@ -208,6 +208,8 @@ const ProductCard = ({
     deleteId !== null ? `${Backend_URL}/wishlist/${deleteId}` : null,
     deleteData
   );
+
+  const ref = useRef<HTMLButtonElement | null>(null);
 
   return (
     <div
@@ -342,7 +344,11 @@ const ProductCard = ({
         )}
       </div>
 
-      <div onClick={(e) => e.stopPropagation()}>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
@@ -367,10 +373,11 @@ const ProductCard = ({
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className=" mt-6 flex  !justify-center">
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel ref={ref}>Cancel</AlertDialogCancel>
               <Button
                 onClick={() => {
                   handleLogin();
+                  ref?.current?.click();
                 }}
                 className=" bg-gold-400 hover:bg-[#e2be6a]  !py-4 rounded-full "
               >
