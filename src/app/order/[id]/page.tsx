@@ -326,7 +326,7 @@ const Order = ({ params }: any) => {
                             {data?.date}
                           </p>
                         </div>
-                        <div className=" lg:col-span-3 col-span-6 flex flex-col">
+                        <div className=" lg:col-span-3 col-span-6 lg:text-end flex flex-col">
                           <p className=" font-serif lg:text-end text-stone-500">
                             Total (Kyat)
                           </p>

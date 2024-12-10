@@ -128,7 +128,9 @@ const OrderComponent = ({ data, refetch }: any) => {
               <p className=" font-serif text-stone-900">{data?.date}</p>
             </div>
             <div className=" col-span-6 lg:col-span-3 flex flex-col">
-              <p className=" font-serif text-stone-500">Total (Kyat)</p>
+              <p className=" font-serif text-stone-500 lg:text-end">
+                Total (Kyat)
+              </p>
               <p className=" font-serif text-stone-900 lg:text-end">
                 {new Intl.NumberFormat("ja-JP").format(data?.total)}
               </p>
@@ -195,8 +197,10 @@ const OrderComponent = ({ data, refetch }: any) => {
               <p className=" font-serif text-stone-500">Order Date</p>
               <p className=" font-serif text-stone-900">{data?.date}</p>
             </div>
-            <div className=" col-span-6 lg:col-span-3 flex flex-col">
-              <p className=" font-serif text-stone-500">Total (Kyat)</p>
+            <div className=" col-span-6 lg:col-span-3 flex flex-col ">
+              <p className=" font-serif text-stone-500 lg:text-end">
+                Total (Kyat)
+              </p>
               <p className=" font-serif text-stone-900 lg:text-end">
                 {new Intl.NumberFormat("ja-JP").format(data?.total)}
               </p>
