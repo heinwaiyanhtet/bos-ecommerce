@@ -60,11 +60,14 @@ const BrandsPage = ({ params }: { params: any }) => {
     <div className=" mt-12">
       <Container>
         <div className=" flex flex-col gap-[15px]">
-          <BreadCrumbComponent path="Home" currentPage={params.slug[0]} />
+          <BreadCrumbComponent
+            path="Home"
+            currentPage={decodeURIComponent(params.slug[0])}
+          />
 
           <Heading
-            header={`Products of ${params.slug[0]}`}
-            desc={`${params.slug[0]}`}
+            header={`Products of ${decodeURIComponent(params.slug[0])}`}
+            desc={`${decodeURIComponent(params.slug[0])}`}
           />
         </div>
       </Container>
