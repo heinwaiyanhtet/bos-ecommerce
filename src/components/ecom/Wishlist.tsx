@@ -16,6 +16,8 @@ import { getSession } from "next-auth/react";
 
 const WishList = ({ closeRef, wishlistData, mutate }: any) => {
   const router = useRouter();
+  
+  const { getSession } = useAppProvider();
 
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
@@ -54,7 +56,7 @@ const WishList = ({ closeRef, wishlistData, mutate }: any) => {
 
   const deleteData = async (url: string) => {
     try {
-      
+
       const token = typeof window !== "undefined" && (await getSession());
 
       if (!token) {
