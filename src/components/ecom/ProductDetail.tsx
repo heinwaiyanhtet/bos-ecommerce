@@ -317,7 +317,7 @@ const ProductDetail = ({
 
   const deleteData = async (url: string) => {
     try {
-      const token = typeof window !== "undefined" && getSession();
+      const token = typeof window !== "undefined" && await getSession();
       if (!token) {
         throw new Error("No access token found");
       }
