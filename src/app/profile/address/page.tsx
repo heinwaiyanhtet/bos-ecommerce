@@ -12,7 +12,6 @@ import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import SweetAlert2 from "react-sweetalert2";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import { z } from "zod";
@@ -34,7 +33,7 @@ const UserAddressPage = () => {
   const [selectedAddress, setSelectedAddress] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const { handleLogin,getSession } = useAppProvider();
+  const { handleLogin, getSession } = useAppProvider();
   const router = useRouter();
 
   useEffect(() => {
@@ -47,9 +46,9 @@ const UserAddressPage = () => {
     }
   }, [isClient]);
 
-  const  patchData = async (url: string, { arg }: any) => {
+  const patchData = async (url: string, { arg }: any) => {
     try {
-      const token = isClient &&  (await getSession());
+      const token = isClient && (await getSession());
       if (!token) {
         throw new Error("No access token found");
       }
@@ -76,7 +75,7 @@ const UserAddressPage = () => {
     }
   };
 
-  const  deleteData = async (url: string, { arg }: any) => {
+  const deleteData = async (url: string, { arg }: any) => {
     try {
       const token = isClient && (await getSession());
       if (!token) {
@@ -106,7 +105,7 @@ const UserAddressPage = () => {
 
   const getData = async (url: string) => {
     try {
-      const token = isClient &&  (await getSession());
+      const token = isClient && (await getSession());
       if (!token) {
         throw new Error("No access token found");
       }
@@ -280,7 +279,6 @@ const UserAddressPage = () => {
   };
 
   const onSubmit = async (value: any) => {
-    console.log(selectedAddress);
     const res = isEditing ? await editAddress(value) : await addAddress(value);
     if (res) {
       setIsEditing(false);
@@ -388,8 +386,12 @@ const UserAddressPage = () => {
                       className=" grid grid-cols-2 gap-4"
                     >
                       <div className=" flex flex-col col-span-full gap-1.5">
-                        <Label htmlFor="address">Street Address</Label>
-                        <Textarea id="address" {...register("addressDetail")} />
+                        <Label htmlFor="address">Address Detail</Label>
+                        <Textarea
+                          id="address"
+                          {...register("addressDetail")}
+                          name="addressDetail"
+                        />
                         {errors.addressDetail && (
                           <p className="text-red-500 text-xs">
                             {errors.addressDetail?.message}
@@ -402,7 +404,8 @@ const UserAddressPage = () => {
                           label="Township"
                           {...register("township")}
                           type="text"
-                          id={"Township"}
+                          id={"township"}
+                          name={"township"}
                         />
                         {errors.township && (
                           <p className="text-red-500 text-xs">
@@ -416,7 +419,8 @@ const UserAddressPage = () => {
                           label="City"
                           type="text"
                           {...register("city")}
-                          id={"City"}
+                          id={"city"}
+                          name={"city"}
                         />
                         {errors.city && (
                           <p className="text-red-500 text-xs">
@@ -428,9 +432,10 @@ const UserAddressPage = () => {
                       <div className=" space-y-1.5 mb-10 col-span-full">
                         <FormInput
                           {...register("street")}
-                          label="State or Division"
+                          label="Street"
                           type="text"
-                          id={"Street"}
+                          id={"street"}
+                          name={"street"}
                         />
                         {errors.street && (
                           <p className="text-red-500 text-xs">

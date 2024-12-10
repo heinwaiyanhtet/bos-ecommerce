@@ -388,7 +388,7 @@ const ShoppingBag = () => {
               </AlertDialogTitle>
               <AlertDialogDescription>
                 <p className=" mt-4 text-stone-800 text-lg text-center font-bold font-serif">
-                  Sign in with Google to share your thoughts
+                  Sign in with Google to checkout
                 </p>
                 <p className=" text-center">
                   {" "}

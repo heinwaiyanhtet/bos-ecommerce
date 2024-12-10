@@ -6,9 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Backend_URL } from "@/lib/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import SweetAlert2 from "react-sweetalert2";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import { z } from "zod";
@@ -26,16 +25,11 @@ import {
 import { toast } from "sonner";
 
 const UserInfoPage = () => {
-
   const [isClient, setIsClient] = useState(false);
 
   const [userId, setUserId] = useState<string | null>(null);
 
-  const {
-  
-    getSession,
-
-  } = useAppProvider();
+  const { getSession } = useAppProvider();
 
   const getData = async (url: string) => {
     try {
@@ -214,7 +208,7 @@ const UserInfoPage = () => {
             </div>
 
             <div className=" flex border-b justify-between items-center">
-              <div className=" ps-8 py-4">
+              <div className=" lg:ps-8 py-4">
                 <p className=" font-normal font-serif text-lg">Phone</p>
                 <p className=" font-thin text-stone-500 font-serif text-lg">
                   {data?.phone}
@@ -230,7 +224,7 @@ const UserInfoPage = () => {
             </div>
 
             <div className=" flex border-b justify-between items-center">
-              <div className=" ps-8 py-4">
+              <div className=" lg:ps-8 py-4">
                 <p className=" font-normal font-serif text-lg">Email</p>
                 <p className=" font-thin text-stone-500 font-serif text-lg">
                   {data?.email}

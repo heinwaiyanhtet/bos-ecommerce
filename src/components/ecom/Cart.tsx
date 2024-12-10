@@ -58,6 +58,7 @@ const Cart = ({ closeRef }: any) => {
             onClick={() => {
               router.push("/shopping-bag");
               closeRef.current && closeRef.current.click();
+              console.log("object");
             }}
             disabled={orderRecord.length == 0}
             className=" bg-gold-400 hover:bg-[#e2be6a] rounded-full w-full "

@@ -91,7 +91,7 @@ const Checkout = () => {
   useEffect(() => {
     if (isClient) {
       setUserId(localStorage.getItem("userId"));
-      
+
       if (!localStorage.getItem("accessToken")) {
         router.push("/shopping-bag");
       }
@@ -102,7 +102,6 @@ const Checkout = () => {
 
   const patchData = async (url: string, { arg }: any) => {
     try {
-
       const token = isClient && (await getSession());
 
       if (!token) {
@@ -161,9 +160,7 @@ const Checkout = () => {
 
   const getData = async (url: string) => {
     try {
-
       const token = isClient && (await getSession());
-
 
       if (!token) {
         throw new Error("No access token found");
@@ -193,7 +190,6 @@ const Checkout = () => {
 
   const postData = async (url: string, { arg }: { arg: any }) => {
     try {
-
       const token = isClient && (await getSession());
 
       if (!token) {
@@ -226,7 +222,6 @@ const Checkout = () => {
 
   const postOrder = async (url: string, { arg }: { arg: OrderData }) => {
     try {
-      
       const token = isClient && (await getSession());
 
       if (!token) {
@@ -641,10 +636,11 @@ const Checkout = () => {
                           className=" grid grid-cols-2 gap-4"
                         >
                           <div className=" flex flex-col col-span-full gap-1.5">
-                            <Label htmlFor="address">Street Address</Label>
+                            <Label htmlFor="address">Address Detail</Label>
                             <Textarea
                               id="address"
                               {...register("addressDetail")}
+                              name="addressDetail"
                             />
                             {errors.addressDetail && (
                               <p className="text-red-500 text-xs">
@@ -658,7 +654,8 @@ const Checkout = () => {
                               label="Township"
                               {...register("township")}
                               type="text"
-                              id={"Township"}
+                              id={"township"}
+                              name={"township"}
                             />
                             {errors.township && (
                               <p className="text-red-500 text-xs">
@@ -672,7 +669,8 @@ const Checkout = () => {
                               label="City"
                               type="text"
                               {...register("city")}
-                              id={"City"}
+                              id={"city"}
+                              name={"city"}
                             />
                             {errors.city && (
                               <p className="text-red-500 text-xs">
@@ -684,9 +682,10 @@ const Checkout = () => {
                           <div className=" space-y-1.5 mb-10 col-span-full">
                             <FormInput
                               {...register("street")}
-                              label="State or Division"
+                              label="Street"
                               type="text"
-                              id={"Street"}
+                              id={"street"}
+                              name={"street"}
                             />
                             {errors.street && (
                               <p className="text-red-500 text-xs">
