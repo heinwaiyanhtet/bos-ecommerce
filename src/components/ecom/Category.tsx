@@ -30,7 +30,7 @@ import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay";
 
-const CategoryComponent = ({ id, param, url }: any) => {
+const CategoryComponent = ({ id, param, url, slug }: any) => {
   const [limit, setLimit] = useState(8);
   const { searchInputValue, setSearchInputValue } = useAppProvider();
 
@@ -43,6 +43,9 @@ const CategoryComponent = ({ id, param, url }: any) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams.get("page") || 1;
+  const orderBy = searchParams.get("orderBy");
+  const orderDirection = searchParams.get("orderDirection");
+
   const [currentPage, setCurrentPage] = useState(Number(page));
 
   const [sorting, setSorting] = useState("");
@@ -51,8 +54,10 @@ const CategoryComponent = ({ id, param, url }: any) => {
     `${Backend_URL}/ecommerce-Products/riddle?sortCategory=${decodeURIComponent(
       id
     )}&page=${Number(page)}${
-      sorting ? `&orderBy=salePrice&orderDirection=${sorting}` : ""
-    }&limit=${10}`,
+      orderBy !== null
+        ? `&orderBy=${orderBy}&orderDirection=${orderDirection}`
+        : ""
+    }&limit=${12}`,
     getData
   );
 
@@ -61,6 +66,27 @@ const CategoryComponent = ({ id, param, url }: any) => {
     isLoading: bannerLoading,
     error: bannerErrors,
   } = useSWR(`${Backend_URL}/banners`, getData);
+
+  const handleSortingChange = (value: string) => {
+    if (value == " ") {
+      router.push(`/categories/${slug[0]}/${slug[1]}/${slug[2]}?page=${1}`);
+    } else {
+      setSorting(value);
+      router.push(
+        `/categories/${slug[0]}/${slug[1]}/${slug[2]}?page=${page}&${value}`
+      );
+    }
+  };
+
+  const handlePageChange = (newPage: number) => {
+    sorting == ""
+      ? router.replace(
+          `/categories/${slug[0]}/${slug[1]}/${slug[2]}?page=${newPage}`
+        )
+      : router.replace(
+          `/categories/${slug[0]}/${slug[1]}/${slug[2]}?page=${newPage}&${sorting}`
+        );
+  };
 
   return (
     <div className=" mt-12">
@@ -73,7 +99,7 @@ const CategoryComponent = ({ id, param, url }: any) => {
 
           <Heading
             header={`New products for ${decodeURIComponent(param)}`}
-            desc={` ${decodeURIComponent(param)}`}
+            desc={`${decodeURIComponent(param)}`}
           />
         </div>
       </Container>
@@ -103,7 +129,7 @@ const CategoryComponent = ({ id, param, url }: any) => {
                 <Select
                   value={sorting}
                   onValueChange={(newSorting) => {
-                    console.log(newSorting);
+                    handleSortingChange(newSorting);
                   }}
                 >
                   <SelectTrigger>
@@ -263,7 +289,7 @@ const CategoryComponent = ({ id, param, url }: any) => {
                     totalPages={data?.totalPages}
                     onPageChange={(page) => {
                       setCurrentPage(page);
-                      router.replace(`/${param}?page=${page}`);
+                      handlePageChange(page);
                     }}
                   />
                 </div>

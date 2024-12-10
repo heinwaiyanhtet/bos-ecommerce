@@ -76,6 +76,8 @@ const ProductCard = ({
       pathSegment = "filter-products";
     } else if (app.includes("search")) {
       pathSegment = "filter-products";
+    } else {
+      pathSegment = "men";
     }
     router.push(`/products/${pathSegment}/${id}`);
   };

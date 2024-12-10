@@ -41,10 +41,16 @@ const BrandsPage = ({ params }: { params: any }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
+  const orderBy = searchParams.get("orderBy");
+  const orderDirection = searchParams.get("orderDirection");
 
   const { data, isLoading, error } = useSWR(
     `${Backend_URL}/ecommerce-Products/riddle?sortBrand=${params.slug[1]}
-        ${sorting !== "default" ? `${sorting}` : ""}&page=${page}&limit=${10}`,
+        ${
+          orderBy !== null
+            ? `&orderBy=${orderBy}&orderDirection=${orderDirection}`
+            : ""
+        }&page=${page}&limit=${12}`,
     getData
   );
 
@@ -55,6 +61,23 @@ const BrandsPage = ({ params }: { params: any }) => {
     isLoading: bannerLoading,
     error: bannerErrors,
   } = useSWR(`${Backend_URL}/banners`, getData);
+
+  const handleSortingChange = (value: string) => {
+    if (value == " ") {
+      router.push(`/brands/${params.slug[0]}/${params.slug[1]}?page=${1}`);
+    } else {
+      setSorting(value);
+      router.push(
+        `/brands/${params.slug[0]}/${params.slug[1]}?page=${page}&${value}`
+      );
+    }
+  };
+
+  const handlePageChange = (newPage: number) => {
+    sorting == ""
+      ? router.push(`/shop/${params.slug[0]}?page=${newPage}`)
+      : router.push(`/shop/${params.slug[0]}?page=${newPage}&${sorting}`);
+  };
 
   return (
     <div className=" mt-12">
@@ -94,12 +117,7 @@ const BrandsPage = ({ params }: { params: any }) => {
                 onClick={(e) => e.preventDefault()}
                 className="col-span-full space-y-1.5"
               >
-                <Select
-                  value={sorting}
-                  onValueChange={(newSorting) => {
-                    console.log(newSorting);
-                  }}
-                >
+                <Select value={sorting} onValueChange={handleSortingChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="Sort Products" />
                   </SelectTrigger>
@@ -257,7 +275,7 @@ const BrandsPage = ({ params }: { params: any }) => {
                     totalPages={data?.totalPages}
                     onPageChange={(page) => {
                       setCurrentPage(page);
-                      router.replace(`/${params.slug[0]}?page=${page}`);
+                      handlePageChange(page);
                     }}
                   />
                 </div>

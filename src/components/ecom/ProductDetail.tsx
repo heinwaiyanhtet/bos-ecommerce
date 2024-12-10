@@ -741,7 +741,7 @@ const ProductDetail = ({
               <div className=" flex flex-col mb-5">
                 <div
                   style={{ alignContent: "baseline" }}
-                  className="flex justify-between mb-2.5 "
+                  className="flex justify-between mb-2.5"
                 >
                   <div className=" flex justify-between items-center">
                     <div className="space-y-2">
@@ -769,13 +769,6 @@ const ProductDetail = ({
                                 : decodeURIComponent(pathSegment)}
                             </BreadcrumbPage>
                           </BreadcrumbItem>
-                          {/* <BreadcrumbSeparator>/</BreadcrumbSeparator>
-
-                            <BreadcrumbItem>
-                              <BreadcrumbPage className=" capitalize  text-xs cursor-pointer">
-                                {productData?.name}
-                              </BreadcrumbPage>
-                            </BreadcrumbItem> */}
                         </BreadcrumbList>
                       </Breadcrumb>
                     </div>
@@ -795,9 +788,8 @@ const ProductDetail = ({
                         href={`https://google.com/search?q=${productData?.productCode}`}
                         className=" group font-mono text-stone-500 cursor-pointer"
                       >
-                        Product Code{" "}
+                        Product Code
                         <span className="group-hover:underline ">
-                          {" "}
                           {productData?.productCode}
                         </span>
                       </a>

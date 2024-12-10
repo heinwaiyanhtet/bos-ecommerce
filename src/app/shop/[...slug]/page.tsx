@@ -55,8 +55,6 @@ const GeneralizedPage = ({ params }: { params: any }) => {
     getData
   );
 
-  console.log(data);
-
   const [currentPage, setCurrentPage] = useState(Number(page));
 
   const {

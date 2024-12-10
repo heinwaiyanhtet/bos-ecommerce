@@ -44,13 +44,14 @@ export async function generateMetadata({
 const CategoryPage = ({ params }: { params: any }) => {
   const { slug } = params;
 
-  // Pass props correctly to the component
+  console.log(slug);
 
   return (
     <CategoryComponent
       id={slug[1]}
       param={slug[0]}
-      url={`/categories/${slug[0]}/${slug[1]}/${slug[2]}`}
+      url={`/${slug[0]}/${slug[1]}/${slug[2]}`}
+      slug={slug}
     />
   );
 };
