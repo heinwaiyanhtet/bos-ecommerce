@@ -69,7 +69,7 @@ const Order = ({ params }: any) => {
 
   const getData = async (url: string) => {
     try {
-      const token = isClient && getSession();
+      const token = isClient && (await getSession());
       if (!token) {
         throw new Error("No access token found");
       }
