@@ -267,7 +267,7 @@ const ProductDetail = ({
   const alertRef = useRef<HTMLButtonElement | null>(null);
 
   const postData = async (url: string, { arg }: { arg: any }) => {
-    const token = isClient && getSession();
+    const token = isClient && (await getSession());
 
     if (!token) {
       throw new Error("No access token found");
